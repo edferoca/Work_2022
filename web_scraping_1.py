@@ -27,7 +27,8 @@ for tag in tags:
         for font in fonts:
             if len(font.contents) >=1:
                 print(font.contents[0])
+
                 #for i in font.contents:
                 #    print(font.contents[i])
-            
-    print(tag.string)
+    else:  
+        print(tag.string)
