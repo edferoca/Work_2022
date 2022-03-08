@@ -2,10 +2,12 @@
 # http://www.py4e.com/code3/bs4.zip
 # and unzip it in the same directory as this file
 
+from ast import Num
 import urllib.request, urllib.parse, urllib.error
 import collections
 collections.Callable = collections.abc.Callable
 from bs4 import BeautifulSoup
+import numpy as np
 import ssl
 
 # Ignore SSL certificate errors
@@ -19,6 +21,7 @@ soup = BeautifulSoup(html, 'html.parser')
 
 # Retrieve all of the anchor tags
 tags=soup.find_all('td')
+array= np.zeros(len(tags))
 
 
 for tag in tags:
@@ -27,8 +30,10 @@ for tag in tags:
         for font in fonts:
             if len(font.contents) >=1:
                 print(font.contents[0])
+                
 
                 #for i in font.contents:
                 #    print(font.contents[i])
     else:  
         print(tag.string)
+print(array)
