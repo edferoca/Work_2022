@@ -33,8 +33,17 @@ for tag in tagsTD:
     else:  
         DatosDeTabla=np.append(DatosDeTabla,tag.string)
        
-#Datos=np.array([DatosDeTabla[0],DatosDeTabla[1]],[DatosDeTabla[2],DatosDeTabla[3]])
+Datos=np.array([])
 for datos in DatosDeTabla:
-    print(datos)
+    try:
+        if len(re.findall('\d+',str(datos)))>=1:
+            Datos=np.append(Datos,datos)
+        
+    except:
+        print("estano")
 
-#print(Datos)
+Datos=np.delete(Datos,[14,21,22,24],0)
+#for data in Datos:
+print(Datos)
+print(Datos.size)
+
