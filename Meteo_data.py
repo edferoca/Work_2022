@@ -7,7 +7,8 @@ collections.Callable = collections.abc.Callable
 from bs4 import BeautifulSoup #scaraping
 import numpy as np #arrreglos y organizacion
 import ssl #certificados dde navegacion web SSL
-import pandas as pd
+import pandas as pd #dataframe para bases de datos
+import paho.mqtt.client as mqtt # para comunicacion MQTT
 
 # ignora los certificados SSL
 ctx = ssl.create_default_context()
