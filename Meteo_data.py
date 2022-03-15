@@ -1,6 +1,7 @@
 from ast import Num
 import string
-import re #filtrar cadenas
+import re
+from time import time #filtrar cadenas
 import urllib.request, urllib.parse, urllib.error
 import collections
 collections.Callable = collections.abc.Callable
@@ -55,35 +56,31 @@ Data=pd.DataFrame(Datos,columns=Columns)
 
 
 #reviso como quede el dataframe Data. ELIMINAR
-#print(Data)
+print(str(Datos[0][0]))
 
 
 # Funciones de conexión y mensaje
 # Al recibir CONNACK desde el servidor
 def on_connect(client, userdata, flags, rc):
-    print("Conexión/código de resultado: "+str(rc))
     # Inicio o renovación de subscripción
-    client.subscribe(topicolee)
-    client.publish(topicolee,"preuba 14º")
+    client.publish(topicolee,str(Datos[0][0]))
 
 # el tópico tiene una publicación
 def on_message(client, userdata, msg):
-    print(msg.topic+" "+str(msg.payload))
-    unmensaje = msg.topic+" "+str(msg.payload)
-    return()
+    print(str(msg.payload))
+
 
 MetoblgClient = mqtt.Client()
 MetoblgClient.on_connect = on_connect
 MetoblgClient.on_message = on_message
-#try:
-
+#Conectarse con el servidor MQTT
 MetoblgClient.username_pw_set(username=usuario,password=contrasena)
-MetoblgClient.connect("servidormqtt",117,60)
-MetoblgClient.publish(topicolee,Datos[0])
-MetoblgClient.loop(.1)
-#MetoblgClient.loop_forever()
-#except:
-    #print("no manito por hay no es")
+MetoblgClient.connect(servidormqtt)
+
+MetoblgClient.loop_start()
+MetoblgClient.publish(topicolee,str(Datos[0][0]))
+MetoblgClient.loop_stop()
+
     
 
 
