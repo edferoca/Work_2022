@@ -10,6 +10,12 @@ import ssl #certificados dde navegacion web SSL
 import pandas as pd #dataframe para bases de datos
 import paho.mqtt.client as mqtt # para comunicacion MQTT
 
+# Parametros para la conexión MQTT
+servidormqtt = "greia-iot.udl.cat"
+usuario = "greiablgr"
+contrasena = "gr314blgr"
+topicolee = "greiablgr/meteo/*"
+
 # ignora los certificados SSL
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
@@ -49,5 +55,35 @@ Data=pd.DataFrame(Datos,columns=Columns)
 
 
 #reviso como quede el dataframe Data. ELIMINAR
-print(Data)
+#print(Data)
+
+
+# Funciones de conexión y mensaje
+# Al recibir CONNACK desde el servidor
+def on_connect(client, userdata, flags, rc):
+    print("Conexión/código de resultado: "+str(rc))
+    # Inicio o renovación de subscripción
+    client.subscribe(topicolee)
+    client.publish(topicolee,"preuba 14º")
+
+# el tópico tiene una publicación
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.payload))
+    unmensaje = msg.topic+" "+str(msg.payload)
+    return()
+
+MetoblgClient = mqtt.Client()
+MetoblgClient.on_connect = on_connect
+MetoblgClient.on_message = on_message
+#try:
+
+MetoblgClient.username_pw_set(username=usuario,password=contrasena)
+MetoblgClient.connect("servidormqtt",117,60)
+MetoblgClient.publish(topicolee,Datos[0])
+MetoblgClient.loop(.1)
+#MetoblgClient.loop_forever()
+#except:
+    #print("no manito por hay no es")
+    
+
 
