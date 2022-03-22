@@ -12,7 +12,7 @@ import pandas as pd #dataframe para bases de datos
 import paho.mqtt.client as mqtt # para comunicacion MQTT
 
 # Parametros para la conexión MQTT
-servidormqtt = "greia-iot.udl.cat"
+servidormqtt = "193.144.12.68"
 usuario = "greiablgr"
 contrasena = "gr314blgr"
 topicolee = "greiablgr/meteo/*"
@@ -43,9 +43,11 @@ Datos=np.array([])
 for datos in DataFromtagstd:
     try:
         if len(re.findall('\d+',str(datos)))>=1:
+            datos = re.sub("\°","",datos)
+            datos = re.sub("C","",datos)
             Datos=np.append(Datos,datos)      
     except:
-        print(" ")
+        x=1
 #elimino los valores que no son importantes y que saltaron el filtro anterior  y organiso el vector comomatriz para el pandas
 Datos=np.delete(Datos,[14,21,22,24],0)
 Datos=Datos.reshape(1,-1)
@@ -56,19 +58,24 @@ Data=pd.DataFrame(Datos,columns=Columns)
 
 
 #reviso como quede el dataframe Data. ELIMINAR
-print(str(Datos[0][0]))
+print(str(Datos[0]))
+
+
+
 
 
 # Funciones de conexión y mensaje
 # Al recibir CONNACK desde el servidor
 def on_connect(client, userdata, flags, rc):
     # Inicio o renovación de subscripción
-    client.publish(topicolee,str(Datos[0][0]))
+    #client.publish(topicolee,str(Datos[0][0]))
+    x=1
+
+    
 
 # el tópico tiene una publicación
 def on_message(client, userdata, msg):
     print(str(msg.payload))
-
 
 MetoblgClient = mqtt.Client()
 MetoblgClient.on_connect = on_connect
@@ -79,7 +86,11 @@ MetoblgClient.connect(servidormqtt)
 
 MetoblgClient.loop_start()
 MetoblgClient.publish(topicolee,str(Datos[0][0]))
+MetoblgClient.publish(topicolee,str(Datos[0][1]))
+MetoblgClient.publish(topicolee,str(Datos[0][5]))
 MetoblgClient.loop_stop()
+
+
 
     
 
